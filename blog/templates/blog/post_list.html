@@ -1,0 +1,36 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h1 class="display-4 text-center text-primary fw-bold mb-4">Blog de Posts</h1>
+
+    {% if posts %}
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm rounded-3">
+                        {# Muestra la imagen del post si existe, de lo contrario, un marcador de posición #}
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" class="card-img-top rounded-top-3" alt="{{ post.title }}">
+                        {% else %}
+                            <img src="https://placehold.co/600x400/cccccc/333333?text=No+Image" class="card-img-top rounded-top-3" alt="No image available">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-white">{{ post.title }}</h5>
+                            <p class="card-text text-secondary flex-grow-1">{{ post.content|truncatechars:100 }}</p>
+                            <p class="card-text mt-2">
+                                <small class="text-muted">Por: {{ post.author.username }}</small><br>
+                                <small class="text-muted">Publicado el: {{ post.fecha_publicacion|date:"d M Y" }}</small>
+                            </p>
+                            <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-primary btn-sm mt-auto">Ver Post</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center mt-5" role="alert">
+            {{ message }}
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Editar Post{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="display-4 text-center text-primary fw-bold mb-4">Editar Post</h1>
+
+    <div class="card bg-dark text-white border-secondary shadow-sm rounded-3 p-4">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data"> 
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {# Título del Post #}
+                <div class="mb-3">
+                    <label for="{{ form.title.id_for_label }}" class="form-label text-white">{{ form.title.label }}:</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        {% for error in form.title.errors %}
+                            <div class="alert alert-danger mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                {# Contenido del Post #}
+                <div class="mb-3">
+                    <label for="{{ form.content.id_for_label }}" class="form-label text-white">{{ form.content.label }}:</label>
+                    {{ form.content }}
+                    {% if form.content.errors %}
+                        {% for error in form.content.errors %}
+                            <div class="alert alert-danger mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                {# Imagen del Post #}
+                <div class="mb-3">
+                    <label for="{{ form.image.id_for_label }}" class="form-label text-white">{{ form.image.label }}:</label>
+                    {% if post.image %}
+                        <div class="mb-2">
+                            <p class="text-muted small">Imagen actual:</p>
+                            <img src="{{ post.image.url }}" class="img-fluid rounded-3" style="max-width: 200px; height: auto;" alt="Imagen actual del post">
+                        </div>
+                    {% endif %}
+                    {{ form.image }}
+                    {% if form.image.errors %}
+                        {% for error in form.image.errors %}
+                            <div class="alert alert-danger mt-1">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">Guardar Cambios</button>
+                    <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-secondary btn-lg rounded-pill shadow-sm">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

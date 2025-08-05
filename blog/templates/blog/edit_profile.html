@@ -1,0 +1,28 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Editar Perfil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="display-4 text-center text-primary fw-bold mb-4">Editar Perfil</h1>
+        <div class="card bg-light text-dark rounded-3 shadow-sm p-4 border border-secondary">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="form-group mb-4">
+                    <legend class="border-bottom mb-4">Datos de Usuario</legend>
+                    {{ user_form.as_p }}
+                </fieldset>
+                <fieldset class="form-group mb-4">
+                    <legend class="border-bottom mb-4">Datos de Perfil</legend>
+                    {{ profile_form.as_p }}
+                </fieldset>
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill">Guardar Cambios</button>
+                    <a href="{% url 'accounts:profile_view' %}" class="btn btn-secondary btn-lg rounded-pill">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

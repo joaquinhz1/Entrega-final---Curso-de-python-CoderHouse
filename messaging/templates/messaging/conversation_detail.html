@@ -1,0 +1,58 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Conversación con {% for participant in conversation.participants.all %}{% if participant != request.user %}{{ participant.username }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="display-4 text-center text-primary fw-bold mb-4">
+        Conversación con 
+        {% for participant in conversation.participants.all %}
+            {% if participant != request.user %}
+                {{ participant.username }}{% if not forloop.last %}, {% endif %}
+            {% endif %}
+        {% endfor %}
+    </h1>
+
+    <div class="card bg-dark text-white border-secondary shadow-sm rounded-3 mb-4" style="max-height: 60vh; overflow-y: auto;">
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="d-flex {% if message.sender == request.user %}justify-content-end{% else %}justify-content-start{% endif %} mb-3">
+                        <div class="card {% if message.sender == request.user %}bg-primary text-white{% else %}bg-secondary text-white{% endif %} p-3 rounded-3 shadow-sm" style="max-width: 75%;">
+                            <p class="mb-1 fw-bold">
+                                {% if message.sender == request.user %}Tú{% else %}{{ message.sender.username }}{% endif %}
+                            </p>
+                            <p class="mb-1">{{ message.content }}</p>
+                            <small class="text-end {% if message.sender == request.user %}text-white-50{% else %}text-muted{% endif %}">{{ message.timestamp|date:"d M Y H:i" }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info text-center" role="alert">
+                    No hay mensajes en esta conversación aún.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card bg-dark text-white border-secondary shadow-sm rounded-3">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">
+                        <i class="fas fa-paper-plane me-2"></i> Enviar Mensaje
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'messaging:conversation_list' %}" class="btn btn-outline-secondary rounded-pill">
+            <i class="fas fa-arrow-left me-2"></i> Volver a Conversaciones
+        </a>
+    </div>
+</div>
+{% endblock %}

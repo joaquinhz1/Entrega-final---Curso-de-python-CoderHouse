@@ -1,0 +1,56 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="display-4 text-center text-primary fw-bold mb-4">Perfil de Usuario</h1>
+        <div class="card bg-white text-dark rounded-3 shadow-sm p-4 border border-secondary">
+            <div class="text-center mb-4">
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" alt="Avatar">
+                {% else %}
+                    <img src="https://via.placeholder.com/150" class="rounded-circle" style="width: 150px; height: 150px;" alt="Avatar por defecto">
+                {% endif %}
+            </div>
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Usuario:</span>
+                    <span>{{ user.username }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Nombre:</span>
+                    <span>{{ user.first_name }} {{ user.last_name }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Email:</span>
+                    <span>{{ user.email }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Biografía:</span>
+                    <span>{{ user.profile.bio|default:"No hay biografía." }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Enlace:</span>
+                    <span>
+                        {% if user.profile.link %}
+                            <a href="{{ user.profile.link }}">{{ user.profile.link }}</a>
+                        {% else %}
+                            No hay enlace.
+                        {% endif %}
+                    </span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Fecha de Nacimiento:</span>
+                    <span>{{ user.profile.birth_date|default:"No especificada." }}</span>
+                </li>
+            </ul>
+            <div class="d-flex justify-content-between mt-3">
+                <a href="{% url 'accounts:edit_profile' %}" class="btn btn-warning rounded-pill">Editar Perfil</a>
+                <a href="{% url 'accounts:change_password' %}" class="btn btn-secondary rounded-pill">Cambiar Contraseña</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

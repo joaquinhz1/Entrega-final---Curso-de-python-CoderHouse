@@ -1,0 +1,29 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <h1 class="display-4 text-center text-primary fw-bold mb-4">{{ post.title }}</h1>
+        <div class="card bg-white text-dark rounded-3 shadow-sm p-4 border border-dark">
+            {% if post.image %}
+                <img src="{{ post.image.url }}" class="img-fluid rounded-3 mb-3" alt="{{ post.title }}">
+            {% endif %}
+            <p>{{ post.content }}</p>
+            <hr>
+            <p class="text-secondary small mt-3">Publicado el: {{ post.fecha_publicacion }}</p>
+            <p class="text-secondary small">Autor: {{ post.author.username }}</p>
+            
+            {% if user.is_authenticated and user == post.author %}
+            <div class="d-flex justify-content-end mt-3">
+                <a href="{% url 'edit_post' post.pk %}" class="btn btn-warning rounded-pill me-2">Editar</a>
+                <a href="{% url 'delete_post' post.pk %}" class="btn btn-danger rounded-pill">Eliminar</a>
+            </div>
+            {% endif %}
+
+            <a href="{% url 'post_list' %}" class="btn btn-outline-secondary mt-3 rounded-pill">Volver a la lista de publicaciones</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

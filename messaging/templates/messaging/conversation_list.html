@@ -1,0 +1,45 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Mis Conversaciones{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="display-4 text-center text-primary fw-bold mb-4">Mis Conversaciones</h1>
+
+    <div class="d-grid gap-2 mb-4">
+        <a href="{% url 'messaging:new_conversation' %}" class="btn btn-success btn-lg rounded-pill shadow-sm">
+            <i class="fas fa-plus-circle me-2"></i> Iniciar Nueva Conversación
+        </a>
+    </div>
+
+    {% if conversations %}
+        <div class="list-group">
+            {% for conversation in conversations %}
+                <a href="{% url 'messaging:conversation_detail' conversation.id %}" class="list-group-item list-group-item-action bg-dark text-white border-secondary mb-2 rounded-3 shadow-sm">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <h5 class="mb-1 text-white">
+                            {% for participant in conversation.participants.all %}
+                                {% if participant != request.user %}
+                                    {{ participant.username }}{% if not forloop.last %}, {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </h5>
+                        <small class="text-muted">{{ conversation.updated_at|date:"d M Y H:i" }}</small>
+                    </div>
+                    {% if conversation.messages.last %}
+                        <p class="mb-1 text-secondary">
+                            {{ conversation.messages.last.sender.username }}: {{ conversation.messages.last.content|truncatechars:50 }}
+                        </p>
+                    {% else %}
+                        <p class="mb-1 text-muted">No hay mensajes aún.</p>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center mt-5" role="alert">
+            No tienes conversaciones aún. ¡Inicia una nueva!
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
